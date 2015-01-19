@@ -17,8 +17,8 @@ import com.google.api.services.drive.DriveScopes;
 
 public class GoogleDriveServiceProvider {
 
-	private static String CLIENT_ID = "PASTE_YOUR_CLIENT_ID_HERE";
-	private static String CLIENT_SECRET = "PASTE_YOUR_CLIENT_SECRET_HERE";
+	private static String CLIENT_ID = "983277890948-4uu1ltqahmnrllumjol82p3jtrmvhjbh.apps.googleusercontent.com";
+	private static String CLIENT_SECRET = "67dM8N0zM1lfSDahxSbirCeY";
 
 	private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
@@ -60,7 +60,8 @@ public class GoogleDriveServiceProvider {
 		GoogleCredential credential = new GoogleCredential().setFromTokenResponse(response);
 
 		//Create a new authorized API client
-		googleDriveClient = new Drive.Builder(httpTransport, jsonFactory, credential).build();
+		googleDriveClient = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("ibox").build();
+		
 	}
 
 	public Drive getGoogleDriveClient() {
