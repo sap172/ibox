@@ -52,6 +52,10 @@ public class GoogleDriveFileSyncManager implements FileSyncManager {
 			service.files().delete(fileId).execute();
 		}
 	}
+	
+	public List getFileList() throws IOException{
+		return service.files().list();
+	}
 
 	public String getFileId(String fileName) {
 		try {

@@ -5,6 +5,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -110,10 +111,12 @@ public class WatchDir {
 	                } else if (event.kind() == ENTRY_DELETE) {
 	                	fileSyncManager.deleteFile(child.toFile());
 	                }
+                } catch (FileNotFoundException e) {
+                	System.out.println("File could not be found");
                 } catch (IOException e) {
                 	System.out.println("Failed to sync the file to remote storage");
                 	e.printStackTrace();
-                }
+                } 
             }
 
             // reset key and remove from set if directory no longer accessible

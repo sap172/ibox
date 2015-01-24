@@ -46,7 +46,6 @@ public class AppTest extends TestCase {
      */
     public void testApp()
     {
-
     	try{
     		File filename = File.createTempFile("junk", null);
     		String dirPath = filename.getParent() + "/";
@@ -80,12 +79,12 @@ public class AppTest extends TestCase {
     		writer.close();
         
     		try{
-    			//wait 5 seconds
+    			//wait 1 seconds
     			Thread.sleep(1000);
     		}catch(InterruptedException e){
     			e.printStackTrace();
     		}
-    		
+    		    		
 			//test googledrivefilesyncmanager addFile is called
 			verify(fsManager, atLeastOnce()).addFile(new File(dirPath + newFile));
 			
@@ -94,25 +93,6 @@ public class AppTest extends TestCase {
     	}
     	catch(IOException e){
     		e.printStackTrace();
-    	}
-    }
-}
-
-class TestRunnableClass implements Runnable{
-
-	boolean running = true;
-	WatchDir globalDir;
-	
-	public TestRunnableClass(WatchDir dir){
-		globalDir = dir;
-	}
-	
-	public void terminate(){
-		running = false;
-	}
-    public void run() {
-    	while(running){
-    		globalDir.processEvents();
     	}
     }
 }

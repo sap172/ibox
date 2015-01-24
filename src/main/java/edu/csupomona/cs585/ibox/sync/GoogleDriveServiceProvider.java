@@ -1,13 +1,11 @@
 package edu.csupomona.cs585.ibox.sync;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -16,11 +14,6 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 
 public class GoogleDriveServiceProvider {
-
-	private static String CLIENT_ID = "983277890948-4uu1ltqahmnrllumjol82p3jtrmvhjbh.apps.googleusercontent.com";
-	private static String CLIENT_SECRET = "67dM8N0zM1lfSDahxSbirCeY";
-
-	private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
 	private static GoogleDriveServiceProvider INSTANCE;
 	private Drive googleDriveClient;
@@ -45,23 +38,20 @@ public class GoogleDriveServiceProvider {
 		HttpTransport httpTransport = new NetHttpTransport();
 		JsonFactory jsonFactory = new JacksonFactory();
 
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-				httpTransport, jsonFactory, CLIENT_ID, CLIENT_SECRET, Arrays.asList(DriveScopes.DRIVE))
-		.setAccessType("online")
-		.setApprovalPrompt("auto").build();
+		try{
+			GoogleCredential credential = new  GoogleCredential.Builder()
+		      .setTransport(httpTransport)
+		      .setJsonFactory(jsonFactory)
+		      .setServiceAccountId("983277890948-7rgrfp7egku9poqk3n51v9n2taq98n82@developer.gserviceaccount.com")
+		      .setServiceAccountScopes(Collections.singleton(DriveScopes.DRIVE))
+		      .setServiceAccountPrivateKeyFromP12File(new File("ibox-fcb2ce8c8540.p12"))
+		      .build();
 
-		String url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
-		System.out.println("Please open the following URL in your browser then type the authorization code:");
-		System.out.println("  " + url);
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String code = br.readLine();
-
-		GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(REDIRECT_URI).execute();
-		GoogleCredential credential = new GoogleCredential().setFromTokenResponse(response);
-
-		//Create a new authorized API client
-		googleDriveClient = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("ibox").build();
-		
+	        googleDriveClient = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("ibox").build();  
+		}catch(GeneralSecurityException e){
+			e.printStackTrace();
+		}
+		       
 	}
 
 	public Drive getGoogleDriveClient() {
