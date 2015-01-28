@@ -122,7 +122,7 @@ public class AppIntegrationTest{
 			Assert.assertTrue(fileExistsInDrive(filename));
 			
 			//move file to different name
-			java.io.File renamedFile = new java.io.File(tempDirectory.getAbsolutePath() + "/" + "junk");
+			java.io.File renamedFile = new java.io.File(tempDirectory.getAbsolutePath() + "/" + "junk2");
 			tempFile.renameTo(renamedFile);
 			
 			sleep(5);
@@ -136,7 +136,9 @@ public class AppIntegrationTest{
 			//delete renamed file
 			renamedFile.delete();
 			
-			sleep(5);
+			Assert.assertFalse(renamedFile.exists());
+			
+			sleep(10);
 			
 			//check if deleted
 			Assert.assertFalse(fileExistsInDrive(renamedFile.getName()));
